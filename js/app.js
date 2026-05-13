@@ -5,6 +5,7 @@
 
 const WALLPAPERS_URL = 'data/wallpapers.json';
 const IMAGE_BASE = 'https://cn.bing.com';
+const PICSUM_MAX_ID = 1084; // Lorem Picsum 图库约 1000 张
 
 let wallpapers = [];
 
@@ -154,6 +155,37 @@ async function loadWallpapers() {
     if (!wallpapers.length) throw new Error('壁纸数据为空，请稍后刷新。');
 }
 
+// ---- Picsum 随机风景（补充 Bing 之外的多样性）----
+
+function displayPicsumPhoto() {
+    const photoBg = document.getElementById('photo-bg');
+    const locationName = document.getElementById('location-name');
+    const locationCountry = document.getElementById('location-country');
+    const photographerCredit = document.getElementById('photographer-credit');
+    const locationNameZh = document.getElementById('location-name-zh');
+
+    const id = Math.floor(Math.random() * PICSUM_MAX_ID);
+    const imageUrl = `https://picsum.photos/id/${id}/1920/1080`;
+
+    const img = new Image();
+    img.onload = () => {
+        photoBg.style.backgroundImage = `url(${imageUrl})`;
+        photoBg.classList.add('loaded');
+    };
+    img.onerror = () => {
+        // 该 ID 无效，递归重试另一个 ID
+        displayPicsumPhoto();
+    };
+    img.src = imageUrl;
+
+    locationName.textContent = '世界美景';
+    locationCountry.textContent = '随机风景';
+    locationNameZh.textContent = '';
+    photographerCredit.textContent = 'photo by Lorem Picsum';
+
+    sessionStorage.setItem('lastPhotoId', 'picsum-' + id);
+}
+
 // ---- 显示 ----
 
 function displayWallpaper(wallpaper) {
@@ -258,12 +290,18 @@ async function loadNewPhoto() {
     hideError();
 
     try {
-        if (wallpapers.length === 0) {
-            showLoading(true);
-            await loadWallpapers();
+        // 70% Bing（有地名） / 30% Picsum（纯风景，更大图库）
+        if (Math.random() < 0.7) {
+            if (wallpapers.length === 0) {
+                showLoading(true);
+                await loadWallpapers();
+                showLoading(false);
+            }
+            displayWallpaper(pickRandomWallpaper());
+        } else {
             showLoading(false);
+            displayPicsumPhoto();
         }
-        displayWallpaper(pickRandomWallpaper());
     } catch (error) {
         showLoading(false);
         showError(error.message || '加载失败，请检查网络后重试。');
