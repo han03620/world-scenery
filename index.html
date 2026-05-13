@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世界风景 - 随机美景</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main id="photo-container">
+        <div id="photo-bg" class="photo-bg" role="img" aria-label="世界风景图片"></div>
+        <div id="photo-overlay" class="photo-overlay"></div>
+
+        <div id="info-card" class="info-card">
+            <h1 id="location-name" class="location-name">--</h1>
+            <p id="location-name-zh" class="location-name-zh"></p>
+            <p id="location-country" class="location-country">--</p>
+            <p id="photographer-credit" class="photographer-credit"></p>
+        </div>
+
+        <button id="refresh-btn" class="refresh-btn" title="换一张（空格键）">
+            换一张
+        </button>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>正在加载美景...</p>
+        </div>
+
+        <div id="error-msg" class="error-msg hidden">
+            <p id="error-text"></p>
+            <button id="retry-btn" class="retry-btn">重试</button>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>照片由 <a href="https://www.bing.com" target="_blank" rel="noopener">Bing 每日壁纸</a> 提供</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

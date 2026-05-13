@@ -1,0 +1,224 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: #fff;
+}
+
+#photo-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #1a1a2e;
+}
+
+.photo-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 0.8s ease;
+    opacity: 0;
+}
+
+.photo-bg.loaded {
+    opacity: 1;
+}
+
+.photo-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 50%,
+        rgba(0, 0, 0, 0.45) 85%,
+        rgba(0, 0, 0, 0.75) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ---- Info card (bottom left) ---- */
+.info-card {
+    position: absolute;
+    bottom: 40px;
+    left: 5%;
+    right: 5%;
+    z-index: 2;
+    max-width: 600px;
+    animation: fadeInUp 0.6s ease both;
+}
+
+.location-name {
+    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    margin-bottom: 4px;
+}
+
+.location-name-zh {
+    font-size: clamp(0.95rem, 2.2vw, 1.4rem);
+    opacity: 0.75;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: 8px;
+}
+
+.location-country {
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    opacity: 0.85;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: 8px;
+}
+
+.photographer-credit {
+    font-size: 0.75rem;
+    opacity: 0.6;
+}
+
+.photographer-credit a {
+    color: #fff;
+    opacity: 0.8;
+}
+
+/* ---- Refresh button (bottom right) ---- */
+.refresh-btn {
+    position: absolute;
+    bottom: 40px;
+    right: 5%;
+    z-index: 3;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    transition: background 0.25s, transform 0.15s;
+}
+
+.refresh-btn:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: scale(1.04);
+}
+
+.refresh-btn:active {
+    transform: scale(0.96);
+}
+
+/* ---- Loading spinner ---- */
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    text-align: center;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+}
+
+/* ---- Error display ---- */
+.error-msg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 32px 40px;
+    border-radius: 12px;
+    max-width: 90vw;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.retry-btn {
+    margin-top: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 8px 28px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.25s;
+}
+
+.retry-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+/* ---- Footer ---- */
+.site-footer {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    font-size: 0.7rem;
+    opacity: 0.4;
+    white-space: nowrap;
+}
+
+.site-footer a {
+    color: #fff;
+    opacity: 0.7;
+}
+
+/* ---- Utility ---- */
+.hidden {
+    display: none !important;
+}
+
+/* ---- Keyframes ---- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 500px) {
+    .info-card {
+        bottom: 80px;
+    }
+    .refresh-btn {
+        bottom: 24px;
+        right: 50%;
+        transform: translateX(50%);
+        padding: 8px 20px;
+        font-size: 0.85rem;
+    }
+    .refresh-btn:hover {
+        transform: translateX(50%) scale(1.04);
+    }
+    .refresh-btn:active {
+        transform: translateX(50%) scale(0.96);
+    }
+}

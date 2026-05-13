@@ -1,0 +1,39 @@
+name: 每日更新壁纸
+
+on:
+  schedule:
+    # 每天 UTC 0:00 运行（北京时间 8:00）
+    - cron: '0 0 * * *'
+  # 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 运行采集脚本
+        run: python scripts/fetch_wallpapers.py
+
+      - name: 提交更新
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/wallpapers.json
+          if git diff --staged --quiet; then
+            echo "没有新的壁纸，跳过提交。"
+          else
+            git commit -m "自动更新壁纸数据 [skip ci]"
+            git push
+            echo "壁纸数据已更新并推送。"
+          fi
